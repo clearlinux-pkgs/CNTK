@@ -1,0 +1,117 @@
+--- CNTK-1.5/configure~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/configure	2016-06-22 13:16:08.087826508 +0000
+@@ -513,7 +513,6 @@
+         *)
+             echo Invalid option $key
+             show_help
+-            exit 1
+     esac
+     shift
+ done
+--- CNTK-1.5/Makefile~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/Makefile	2016-06-22 13:23:28.556801856 +0000
+@@ -64,7 +64,7 @@
+ # COMMON_FLAGS include settings that are passed both to NVCC and C++ compilers.
+ COMMON_FLAGS:= -D_POSIX_SOURCE -D_XOPEN_SOURCE=600 -D__USE_XOPEN2K -std=c++11
+ CPPFLAGS:= 
+-CXXFLAGS:= -msse3 -std=c++0x -fopenmp -fpermissive -fPIC -Werror -fcheck-new
++CXXFLAGS:= -msse3 -std=c++0x -fopenmp -fpermissive -fPIC -fcheck-new
+ LIBPATH:=
+ LIBS:=
+ LDFLAGS:=
+@@ -678,7 +678,7 @@
+ 	@echo $(SEPARATOR)
+ 	@echo creating $@ for $(ARCH) with build type $(BUILDTYPE)
+ 	@mkdir -p $(dir $@)
+-	$(NVCC) -c $< -o $@ $(COMMON_FLAGS) $(CUFLAGS) $(INCLUDEPATH:%=-I%) -Xcompiler "-fPIC -Werror"
++	$(NVCC) -c $< -o $@ $(COMMON_FLAGS) $(CUFLAGS) $(INCLUDEPATH:%=-I%) -Xcompiler "-fPIC"
+ 
+ $(OBJDIR)/%.o : %.cpp $(MAKEFILES)
+ 	@echo $(SEPARATOR)
+--- CNTK-1.5/Source/ComputationNetworkLib/ComputationNetwork.cpp~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/Source/ComputationNetworkLib/ComputationNetwork.cpp	2016-06-22 13:29:13.453846854 +0000
+@@ -24,6 +24,7 @@
+ #include <stack>
+ #include <list>
+ #include <set>
++#include <cmath>
+ 
+ using namespace std;
+ 
+--- CNTK-1.5/Source/Readers/ReaderLib/TruncatedBpttPacker.cpp~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/Source/Readers/ReaderLib/TruncatedBpttPacker.cpp	2016-06-22 13:27:08.719280406 +0000
+@@ -7,6 +7,7 @@
+ #define _SCL_SECURE_NO_WARNINGS
+ 
+ #include <deque>
++#include <cmath>
+ #include "TruncatedBpttPacker.h"
+ #include "ElementTypeUtils.h"
+ 
+--- CNTK-1.5/Source/ComputationNetworkLib/InputAndParamNodes.h~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/Source/ComputationNetworkLib/InputAndParamNodes.h	2016-06-22 13:33:24.123958492 +0000
+@@ -11,7 +11,7 @@
+ #include "Matrix.h"
+ 
+ #include <string>
+-
++#include <cmath>
+ namespace Microsoft { namespace MSR { namespace CNTK {
+ 
+ // -----------------------------------------------------------------------
+--- CNTK-1.5/Source/Common/Include/ssematrix.h~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/Source/Common/Include/ssematrix.h	2016-06-22 13:36:00.231156178 +0000
+@@ -22,6 +22,7 @@
+ #include "fileutil.h" // for saving and reading matrices
+ #include <limits>     // for NaN
+ #include <malloc.h>
++#include <cmath>
+ 
+ #ifdef min
+ #undef min // some garbage from some Windows header that conflicts with std::min()
+--- CNTK-1.5/Source/Common/Include/latticearchive.h~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/Source/Common/Include/latticearchive.h	2016-06-22 13:38:22.813508345 +0000
+@@ -23,6 +23,7 @@
+ #include <algorithm> // for find()
+ #include "simplesenonehmm.h"
+ #include "Matrix.h"
++#include <cmath>
+ 
+ namespace msra { namespace math {
+ 
+--- CNTK-1.5/Source/Common/Include/Basics.h~	2016-06-06 19:21:55.000000000 +0000
++++ CNTK-1.5/Source/Common/Include/Basics.h	2016-06-22 13:51:04.356692871 +0000
+@@ -21,6 +21,7 @@
+ #endif
+ #include <cctype>
+ #include <cwctype>
++#include <cmath>
+ 
+ #define TWO_PI 6.283185307f // TODO: find the official standards-confirming definition of this and use it instead
+ 
+--- CNTK-1.5/Makefile~	2016-06-22 13:23:28.000000000 +0000
++++ CNTK-1.5/Makefile	2016-06-22 15:47:55.392417713 +0000
+@@ -140,7 +140,7 @@
+ ifeq ("$(MATHLIB)","openblas")
+   INCLUDEPATH += $(OPENBLAS_PATH)/include
+   LIBPATH += $(OPENBLAS_PATH)/lib
+-  LIBS += -lopenblas -lm -lpthread
++  LIBS += -lopenblas -lm -lpthread -ldl
+   CPPFLAGS += -DUSE_OPENBLAS
+ endif
+ 
+--- CNTK-1.5/Makefile~	2016-06-22 15:47:55.000000000 +0000
++++ CNTK-1.5/Makefile	2016-06-22 15:55:26.222701759 +0000
+@@ -694,6 +694,12 @@
+ 	@rm -rf $(ALL)
+ 	@rm -rf $(BUILDINFO)
+ 	@echo finished cleaning up the project
++	
++install:
++	mkdir -p $(DESTDIR)/usr/bin
++	mkdir -p $(DESTDIR)/usr/lib64
++	cp bin/* $(DESTDIR)/usr/bin
++	cp lib/* $(DESTDIR)/usr/lib64
+ 
+ buildall : $(ALL)
+ 	@echo $(SEPARATOR)

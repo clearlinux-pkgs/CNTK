@@ -59,6 +59,9 @@ make V=1  %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 %make_install
+## make_install_append content
+chmod a+x %{buildroot}/usr/bin/*
+## make_install_append end
 
 %files
 %defattr(-,root,root,-)

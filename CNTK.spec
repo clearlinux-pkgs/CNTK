@@ -4,7 +4,7 @@
 #
 Name     : CNTK
 Version  : 1.5
-Release  : 1
+Release  : 2
 URL      : https://github.com/Microsoft/CNTK/archive/v1.5.tar.gz
 Source0  : https://github.com/Microsoft/CNTK/archive/v1.5.tar.gz
 Summary  : No detailed summary available

@@ -1,1 +1,3 @@
 --with-openblas=/usr
+--with-opencv
+

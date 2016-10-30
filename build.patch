@@ -10,15 +10,6 @@
  done
 --- CNTK-1.5/Makefile~	2016-06-06 19:21:55.000000000 +0000
 +++ CNTK-1.5/Makefile	2016-06-22 13:23:28.556801856 +0000
-@@ -64,7 +64,7 @@
- # COMMON_FLAGS include settings that are passed both to NVCC and C++ compilers.
- COMMON_FLAGS:= -D_POSIX_SOURCE -D_XOPEN_SOURCE=600 -D__USE_XOPEN2K -std=c++11
- CPPFLAGS:= 
--CXXFLAGS:= -msse3 -std=c++0x -fopenmp -fpermissive -fPIC -Werror -fcheck-new
-+CXXFLAGS:= -msse3 -std=c++0x -fopenmp -fpermissive -fPIC -fcheck-new
- LIBPATH:=
- LIBS:=
- LDFLAGS:=
 @@ -678,7 +678,7 @@
  	@echo $(SEPARATOR)
  	@echo creating $@ for $(ARCH) with build type $(BUILDTYPE)
@@ -115,3 +106,14 @@
  
  buildall : $(ALL)
  	@echo $(SEPARATOR)
+--- CNTK-1.7.2/Makefile~	2016-10-01 15:07:28.000000000 +0000
++++ CNTK-1.7.2/Makefile	2016-10-30 18:45:59.836744488 +0000
+@@ -73,7 +73,7 @@
+ # COMMON_FLAGS include settings that are passed both to NVCC and C++ compilers.
+ COMMON_FLAGS:= -D_POSIX_SOURCE -D_XOPEN_SOURCE=600 -D__USE_XOPEN2K -std=c++11
+ CPPFLAGS:= 
+-CXXFLAGS:= -msse4.1 -mssse3 -std=c++0x -fopenmp -fpermissive -fPIC -Werror -fcheck-new
++CXXFLAGS:= -ftree-vectorize -O3 -msse4.1 -mssse3 -std=c++0x -fopenmp -fpermissive -fPIC -fcheck-new
+ LIBPATH:=
+ LIBS:=
+ LDFLAGS:=

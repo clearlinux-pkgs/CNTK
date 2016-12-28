@@ -4,7 +4,7 @@
 #
 Name     : CNTK
 Version  : 1.7.2
-Release  : 3
+Release  : 4
 URL      : https://github.com/Microsoft/CNTK/archive/v1.7.2.tar.gz
 Source0  : https://github.com/Microsoft/CNTK/archive/v1.7.2.tar.gz
 Summary  : No detailed summary available
